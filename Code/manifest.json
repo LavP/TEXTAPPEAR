@@ -1,0 +1,17 @@
+{
+    "name"              : "TEXTAPEEAR",
+    "short_name"        : "TEXTAPEEAR",
+    "description"       : "TEXTAPPEARを使用すると、手元で読む文章に適した文字組みを簡単に制作することができます。",
+    "start_url"         : "/",
+    "display"           : "standalone",
+    "orientation"       : "any",
+    "background_color"  : "#416267",
+    "theme_color"       : "#416267",
+    "icons": [
+      {
+        "src"           : "/images/favicon/android-chrome-512x512.png",
+        "sizes"         : "512x512",
+        "type"          : "image/png"
+      }
+    ]
+  }

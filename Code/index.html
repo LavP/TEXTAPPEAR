@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TEXTAPPEAR</title>
+    <!--OGP&Google Bot-->
+        <!-- Search Engine -->
+        <meta name="description" content="TEXTAPPEARを使用すると、手元で読む文章に適した文字組みを簡単に制作することができます。">
+        <!-- Schema.org for Google -->
+        <meta itemprop="name" content="TEXTAPEEAR">
+        <meta itemprop="description" content="TEXTAPPEARを使用すると、手元で読む文章に適した文字組みを簡単に制作することができます。">
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="TEXTAPEEAR">
+        <meta name="twitter:description" content="TEXTAPPEARを使用すると、手元で読む文章に適した文字組みを簡単に制作することができます。">
+        <!-- Open Graph general (Facebook, Pinterest & Google+) -->
+        <meta name="og:title" content="TEXTAPEEAR">
+        <meta name="og:description" content="TEXTAPPEARを使用すると、手元で読む文章に適した文字組みを簡単に制作することができます。">
+        <meta name="og:url" content="http://dhost.nextlav.xyz/textapeear">
+        <meta name="og:site_name" content="TEXTAPEEAR">
+        <meta name="og:locale" content="ja_JP">
+        <meta name="og:type" content="website">
+    <!--favicon and site icon-->
+        <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+        <link rel="manifest" href="images/favicon/site.webmanifest">
+        <link rel="mask-icon" href="images/favicon/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#416267">
+    <!--Web fonts-->
+    <script>
+        (function(d) {
+            var config = {
+            kitId: 'cru4qsu',
+            scriptTimeout: 3000,
+            async: true
+            },
+            h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+        })(document);
+    </script>
+    <!--PWA-->
+    <link rel="manifest" href="/manifest.json">
+    <!--STYLE-->
+    <meta name="theme-color" content="#416267">
+    <link rel="stylesheet" href="style/index.css">
+</head>
+<body>
+<div id="vm" v-bind:style='getPageBackgroundColor()'>
+    <div id="wrap">
+        <div id="hello" v-if='sceneSwitch == "hello"'>
+            <h1>
+                <span class="none">TEXTAPEEAR</span>
+                <img src="images/logo.svg" alt="TEXTAPEEAR">
+            </h1>
+            <p>
+                TEXTAPPEARを使用すると、手元で読む文章に適した文字組みを簡単に制作することができます。
+            </p>
+            <p>
+                また、作った文字組みを実現するためのCSSやIllustrator、Photoshopの設定を確認することができます。
+            </p>
+            <button id="continue" v-on:click='switchContinue()'>CONTINUE</button>
+        </div>
+        
+        
+        <div id="tutorial" v-if="sceneSwitch == 'tutorial'" v-on:click='sceneSwitch = "wait"'>
+            <div>
+                <img src="images/tutorialIcon.svg" alt="⚙">
+                <h3>文字組みを調整する</h3>
+                <p>編集したい要素をクリックすると編集メニューが表示されます。</p>
+            </div>
+        </div>
+
+        
+
+
+        <div id="appUI" v-if='sceneSwitch == "tutorial" || sceneSwitch == "wait" || sceneSwitch == "preview" || sceneSwitch == "selectFunc" || sceneSwitch == "waitFunc"'>
+            <nav id="operateMenu" v-show='sceneSwitch == "wait"'>
+                <ul>
+                    <li v-on:click='readRecentValue()'><img src="images/back.svg" alt="↩"><span>undo</span></li>
+                    <li v-on:click='readFirstValue()'><img src="images/reset.svg" alt="↺"><span>reset</span></li>
+                    <li v-on:click='sceneSwitch = "result";scrollReset()'><img src="images/disibe.svg" alt="✓"><span>disibe</span></li>
+                </ul>
+            </nav>
+
+            <div id="mainMenu" v-show='sceneSwitch == "selectFunc" || sceneSwitch == "waitFunc" || sceneSwitch == "preview"' v-bind:class='{ onTouch : sceneSwitch == "preview" , targetIsTitle : target == "title" , targetIsText : target == "text"}'>
+                <ul id="funcList" v-show='sceneSwitch == "selectFunc"'>
+                    <li 
+                        v-on:click='
+                        funcMode = "color"; 
+                        sceneSwitch = "waitFunc"
+                    '><img src="images/color.svg"><span>文字色</span></li>
+                    <li 
+                        v-on:click='
+                        funcMode = "fontSize"; 
+                        sceneSwitch = "waitFunc"
+                    '><img src="images/fontSize.svg"><span>文字サイズ</span></li>
+                    <li 
+                        v-on:click='
+                        funcMode = "fontFamily"; 
+                        sceneSwitch = "waitFunc"
+                    '><img src="images/fontFamily.svg"><span>書体</span></li>
+                    <li 
+                        v-on:click='
+                        funcMode = "lineHeight"; 
+                        sceneSwitch = "waitFunc"
+                    '><img src="images/lineHeight.svg"><span>行間</span></li>
+                    <li 
+                        v-on:click='
+                        funcMode = "textAlign"; 
+                        sceneSwitch = "waitFunc"
+                    '><img src="images/textAlign.svg"><span>行揃え</span></li>
+                    <li 
+                        v-on:click='
+                        funcMode = "letterSpacing"; 
+                        sceneSwitch = "waitFunc"
+                    '><img src="images/letterSpacing.svg"><span>字詰め</span></li>
+                    <li 
+                        v-on:click='
+                        funcMode = "padding"; 
+                        sceneSwitch = "waitFunc"
+                    '><img src="images/padding.svg"><span>余白</span></li>
+                    <li 
+                        v-on:click='
+                        funcMode = "backgroundColor"; 
+                        sceneSwitch = "waitFunc"
+                    '><img src="images/backgroundColor.svg"><span>背景色</span></li>
+                </ul>
+
+                <div id="funcUI" v-show='sceneSwitch == "waitFunc" || sceneSwitch == "preview"'>
+                    <h2 id="funcTitle">
+                        <img v-bind:src="'images/'+funcMode+'.svg'" v-bind:alt='getFuncModeName()'>
+                        <span>{{ getFuncModeName() }}</span>
+                    </h2>
+
+                    <color-cont
+                    v-if='funcMode == "color"' 
+                    v-on:send-from-child='changeColor' 
+                    v-bind:target='target' 
+                    v-bind:now-title-color='titleStyles.color' 
+                    v-bind:now-text-color='textStyles.color'></color-cont>
+                    <font-size-cont
+                    v-if='funcMode == "fontSize"' 
+                    v-on:send-from-child='changeFontSize'></font-size-cont>
+                    <font-family-cont
+                    v-if='funcMode == "fontFamily"' 
+                    v-on:send-from-child='changeFontFamily'></font-family-cont>
+                    <line-height-cont
+                    v-if='funcMode == "lineHeight"' 
+                    v-on:send-from-child='changeLineHeight'></line-height-cont>
+                    <text-align-cont
+                    v-if='funcMode == "textAlign"' 
+                    v-on:send-from-child='changeTextAlign'></text-align-cont>
+                    <letter-spacing-cont
+                    v-if='funcMode == "letterSpacing"' 
+                    v-on:send-from-child='changeLetterSpacing'></letter-spacing-cont>
+                    <padding-cont
+                    v-if='funcMode == "padding"' 
+                    v-on:send-from-child='changePadding'></padding-cont>
+                    <background-color-cont
+                    v-if='funcMode == "backgroundColor"' 
+                    v-on:send-from-child='changeBackgroundColor' 
+                    v-bind:now-background-color='backgroundColor'></background-color-cont>
+                    
+                </div>
+            </div>
+
+        </div>
+
+        <div id="backTo" v-show='sceneSwitch == "preview" || sceneSwitch == "selectFunc" || sceneSwitch == "waitFunc"' v-on:click='backToFunc()'>
+            <!--戻る機能を実装するための見えない要素-->
+        </div>
+        
+        <div id="previewUI" v-if='sceneSwitch == "tutorial" || sceneSwitch == "wait" || sceneSwitch == "preview" || sceneSwitch == "selectFunc" || sceneSwitch == "waitFunc"'>
+            <h2 id="preTitle" v-bind:style='getTitleStyles()' v-on:click="sceneSwitch = 'selectFunc';target = 'title';saveRecentValue()">レーダーで細かいジェスチャ操作が可能に Googleの新技術が認可</h2>
+            <div id="preArticle">
+                <img src="images/articlePhoto.png" id="preIm">
+                <p class="preText" v-bind:style="getTextStyles()" v-on:click="sceneSwitch = 'selectFunc';target = 'text'; saveRecentValue()">
+                    「バーチャル・リアリティ」という言葉は、ジャロン・ラニアーが設立したVPL Researchが、1989年に発表したVR製品のデータ・グローブ (Data Glove)・アイ・フォン(Eye Phone)・オーディオ・スフィア (Audio Sphere) の紹介から一般的に使われ始めた[6]。
+                </p>
+                <p class="preText" v-bind:style="getTextStyles()" v-on:click="sceneSwitch = 'selectFunc';target = 'text';saveRecentValue()">
+                    ウェアラブル型ではなく部屋の壁の全方位に映像を投影して没入環境を構築するVRシステムは、1991年にイリノイ大学のElectronic Visualization Laboratoryの Thomas DeFanti らによって提案された CAVE [7]（Cave automatic virtual environment、没入型の投影ディスプレイ）が有名である。1997年にはCABINが東京大学インテリジェント・モデリング・ラボラトリーに設置され、2012年まで、15年間にわたり運用された[8]。岐阜県各務原市のVRテクノセンターには6面を大型スクリーンで囲んだCOSMOSが設置された。
+                </p>
+            </div>
+        </div> 
+
+
+        <!--Result screen-->
+        <div id="resultScreen" v-if='sceneSwitch == "result"'>
+            <div id="msg">
+                <div>
+                    <img src="images/disibe.svg" alt="✔">
+                    <span>Good Design!</span>
+                </div>
+                <p>以下の値を設定すると<br>デザインを再現できます</p>
+            </div>
+            <dl id="outputs">
+                <div id="outputTypeSelectors">
+                    <dt class="outputTypeSelector" title="標準的なCSSでの実装方法" v-on:click='activeTab = "css"' v-bind:class='{ activeTab : activeTab == "css"}'>CSS</dt>
+                    <dt class="outputTypeSelector" title="Adobe Illustrator CCでの設定方法" v-on:click='activeTab = "ai"' v-bind:class='{ activeTab : activeTab == "ai"}'>Ai</dt>
+                    <dt class="outputTypeSelector" title="Adobe Photoshop CCでの設定方法" v-on:click='activeTab = "ps"' v-bind:class='{ activeTab : activeTab == "ps"}'>Ps</dt>
+                </div>
+                <!--CSS-->
+                <div id="outputContents">
+                    <dd class="outputContent" id="outputTypeCSS" v-show='activeTab == "css"'>
+                        <code id="h1_code">
+                            //タイトルのCSS<br>
+                            title-element{<br>
+                                <div class="indentCode">
+                                color : {{getTitleStyles().color}} ;<br>
+                                font-size : {{getTitleStyles().fontSize}} ;<br>
+                                font-family : {{getTitleStyles().fontFamily}} ;<br>
+                                line-height : {{getTitleStyles().lineHeight}} ;<br>
+                                text-align : {{getTitleStyles().textAlign}} ;<br>
+                                letter-spacing : {{getTitleStyles().letterSpacing}} ;<br>
+                                padding : {{getTitleStyles().padding}} ;<br>
+                                </div>
+                            }<br>
+                        </code>
+                        <code id="p_code">
+                            //タイトルのCSS<br>
+                            p{<br>
+                                <div class="indentCode">
+                                color : {{getTextStyles().color}} ;<br>
+                                font-size : {{getTextStyles().fontSize}} ;<br>
+                                font-family : {{getTextStyles().fontFamily}} ;<br>
+                                line-height : {{getTextStyles().lineHeight}} ;<br>
+                                text-align : {{getTextStyles().textAlign}} ;<br>
+                                letter-spacing : {{getTextStyles().letterSpacing}} ;<br>
+                                padding : {{getTextStyles().padding}} ;<br>
+                                </div>
+                            }<br>
+                        </code>
+                        <code id="background_code">
+                            //背景のCSS<br>
+                            #wrap-element{<br>
+                                <div class="indentCode">
+                                background-color : {{getPageBackgroundColor().copy}};<br>
+                                </div>
+                            }<br>
+                        </code>
+                    </dd>
+                    <!--Adobe Illustrator CC-->
+                    <dd class="outputContent" id="outputTypeCSS" v-show='activeTab == "ai"'>
+                        この表示はまだサポートされていません
+                    </dd>
+                    <!--Adobe Photoshop CC-->
+                    <dd class="outputContent" id="outputTypeCSS" v-show='activeTab == "ps"'>
+                        この表示はまだサポートされていません
+                    </dd>
+                </div>
+            </dl>
+
+            <div id="backToEdit" v-on:click='sceneSwitch = "wait";scrollReset()'>
+                <img src="images/back.svg" alt="↩">
+                <span>back</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!--JS-->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js"></script>
+<script src="js/component.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
